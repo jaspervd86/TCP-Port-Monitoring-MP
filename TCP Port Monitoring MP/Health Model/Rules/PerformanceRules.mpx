@@ -1,0 +1,36 @@
+﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Monitoring>
+    <Rules>
+      <Rule ID="TCPPortMonitoring.ManagementPack.ConnectionTime.Rule" Enabled="true" Target="TCPPortMonitoring.ManagementPack.Class" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>PerformanceCollection</Category>
+        <DataSources>
+          <DataSource ID="DS1" TypeID="TCPPortMonitor.TCPPortCheck.DataSource">
+            <ServerName>$Target/Property[Type="TCPPortMonitoring.ManagementPack.Class"]/ServerName$</ServerName>
+            <Port>$Target/Property[Type="TCPPortMonitoring.ManagementPack.Class"]/Port$</Port>
+            <NoOfRetries>$Target/Property[Type="TCPPortMonitoring.ManagementPack.Class"]/NoOfRetries$</NoOfRetries>
+            <TimeWindowInSeconds>$Target/Property[Type="TCPPortMonitoring.ManagementPack.Class"]/TimeWindowInSeconds$</TimeWindowInSeconds>
+          </DataSource>
+        </DataSources>
+        <ConditionDetection ID="PerfMapper" TypeID="Performance!System.Performance.DataGenericMapper">
+          <ObjectName>TCP Port Check</ObjectName>
+          <CounterName>Connection Time</CounterName>
+          <InstanceName>$Data/ServerName$ on $Data/Port$</InstanceName>
+          <Value>$Data/ConnectionTime$</Value>
+        </ConditionDetection>
+        <WriteActions>
+          <WriteAction ID="PerfWriteAction" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
+          <WriteAction ID="PerfWriteToDWAction" TypeID="SystemCenter!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+        </WriteActions>
+      </Rule>
+    </Rules>
+  </Monitoring>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="TCPPortMonitoring.ManagementPack.ConnectionTime.Rule">
+          <Name>TCP Connection Time</Name>
+        </DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPackFragment>

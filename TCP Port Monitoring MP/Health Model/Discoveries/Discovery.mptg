@@ -1,0 +1,27 @@
+<TemplateGroup>
+  <Instances>
+    <Instance ID="Instance3d5876a2e98b4569931758d52012d10f" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.Discovery" Version="1.0.0.0">
+      <DiscoveryConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <Id>Port.Discovery</Id>
+        <DisplayName>TCP Monitoring Class Discovery</DisplayName>
+        <Description>Discovers TCP Port Monitoring Configs from given CSV file.</Description>
+        <DataSourceId>DS</DataSourceId>
+        <DataSourceConfig>&lt;IntervalSeconds&gt;14400&lt;/IntervalSeconds&gt;&lt;SyncTime&gt;12:20&lt;/SyncTime&gt;&lt;filePath&gt;\\pfssc002\SCOM_Maintenance\ScriptFiles\TCPPortMonitoringList.csv&lt;/filePath&gt;</DataSourceConfig>
+        <DataSourceType>TCPPortMonitoring.ManagementPack.Discovery.DataSource</DataSourceType>
+        <Target>SC!Microsoft.SystemCenter.AllManagementServersPool</Target>
+        <Enabled>true</Enabled>
+        <Remotable>true</Remotable>
+        <Priority>Normal</Priority>
+        <ConfirmDelivery>false</ConfirmDelivery>
+        <Category>Discovery</Category>
+        <DiscoveryClasses>
+          <DiscoveryClassItem>
+            <TypeId>TCPPortMonitoring.ManagementPack.Class</TypeId>
+            <Properties />
+          </DiscoveryClassItem>
+        </DiscoveryClasses>
+        <DiscoveryRelationships />
+      </DiscoveryConfig>
+    </Instance>
+  </Instances>
+</TemplateGroup>

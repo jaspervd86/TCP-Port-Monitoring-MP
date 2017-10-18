@@ -1,0 +1,117 @@
+﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <TypeDefinitions>
+    <ModuleTypes>
+      <DataSourceModuleType ID="TCPPortMonitoring.ManagementPack.Discovery.DataSource" Accessibility="Internal" Batching="false">
+        <Configuration>
+          <xsd:element minOccurs="1" name="IntervalSeconds" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" name="SyncTime" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" name="filePath" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="FilePath" Selector="$Config/filePath$" ParameterType="string" />
+        </OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <DataSource ID="DS" TypeID="System!System.SimpleScheduler">
+                <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+                <SyncTime>$Config/SyncTime$</SyncTime>
+              </DataSource>
+              <ProbeAction ID="Probe" TypeID="Windows!Microsoft.Windows.PowerShellDiscoveryProbe">
+                <ScriptName>TCPPortMonitoringConfigDiscovery.ps1</ScriptName>
+                <ScriptBody>
+                  param(
+                  [string] $sourceId,
+                  [string] $managedEntityId,
+                  [string] $filePath  )
+
+                  #Initialize SCOM API
+
+                  $api = new-object -comObject 'MOM.ScriptAPI'
+                  $discoveryData = $api.CreateDiscoveryData(0, $SourceId, $ManagedEntityId)
+                  write-eventlog -logname "Operations Manager" -Source "Health Service Script" -EventID 999 -Message "TCP Port Monitoring: looking for CSV file" -EntryType Information
+                  # $filePath variable contains UNC path of CSV Config file
+                  if (test-path $filePath) {
+                  write-eventlog -logname "Operations Manager" -Source "Health Service Script" -EventID 999 -Message "TCP Port Monitoring: Accessing CSV file" -EntryType Information
+                  $contents = Import-Csv $filePath
+                  try{
+                  $Path = (Get-ItemProperty "HKLM:SOFTWARE\Microsoft\System Center Operations Manager\12\Setup\Powershell\V2").InstallDirectory
+                  $Path1 = $Path + "OperationsManager\OperationsManager.psm1"
+                  if (Test-Path $Path1)
+                  {
+                  Import-Module $Path1
+                  }
+                  else
+                  {
+                  Import-Module OperationsManager
+                  }
+                  New-SCOMManagementGroupConnection
+                  #Retrieve all windows computers which can be used as watcher nodes
+                  $allServers = Get-SCClass | where { $_.Name -eq ("Microsoft.Windows.Computer")} | get-scommonitoringobject
+                  }
+                  catch{
+                  write-eventlog -logname "Operations Manager" -Source "Health Service Script" -EventID 999 -Message "TCP Port Monitoring: $_" -EntryType Information
+                  }
+                  #Read line by line from configuration file and create instance of TCP Port Monitoring Class
+                  $contents | ForEach-Object{
+                  $ServerName = $_.ServerName
+                  $PortNumber = $_.PortNumber
+                  $WatcherNode = $_.WatcherNode
+                  $NoOfRetries = $_.NoOfRetries
+                  $TimeWindowInSeconds = $_.TimeWindowInSeconds
+                  $Config = "$ServerName"+":"+"$PortNumber" # Will be used as display name
+                  write-eventlog -logname "Operations Manager" -Source "Health Service Script" -EventID 555 -Message "Checking servers" -EntryType Information
+                  $allServers | ForEach-Object{
+                  #Create instance only if the watcher node is managed by SCOM as the instance will hosted by the watcher node.
+                  #The hosting object is windows computer whose display name is equal to watcher node value from CSV
+                  #If there is no matching windows computer managed by SCOM, then the instance cannot be hosted. Hence the instance is not discovered.
+                  if((($_.DisplayName).toLower()).contains($WatcherNode.toLower())){
+                  write-eventlog -logname "Operations Manager" -Source "Health Service Script" -EventID 555 -Message "Creating Instance for $Config" -EntryType Information
+                  $instance = $discoveryData.CreateClassInstance("$MPElement[Name='TCPPortMonitoring.ManagementPack.Class']$")
+                  $instance.AddProperty("$MPElement[Name='TCPPortMonitoring.ManagementPack.Class']/ServerName$", $ServerName)
+                  $instance.AddProperty("$MPElement[Name='TCPPortMonitoring.ManagementPack.Class']/Port$", $PortNumber)
+                  $instance.AddProperty("$MPElement[Name='TCPPortMonitoring.ManagementPack.Class']/NoOfRetries$", $NoOfRetries)
+                  $instance.AddProperty("$MPElement[Name='TCPPortMonitoring.ManagementPack.Class']/TimeWindowInSeconds$", $TimeWindowInSeconds)
+                  #The hosting object is windows computer whose display name is equal to watcher node value from CSV
+                  $instance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $_.DisplayName)
+                  $instance.AddProperty("$MPElement[Name='System!System.Entity']/DisplayName$", $Config)
+                  $discoveryData.AddInstance($instance)
+                  return
+                  }
+                  }
+                  }
+                  }
+                  $discoveryData
+                  Remove-variable api
+                  Remove-variable discoveryData
+                </ScriptBody>
+                <Parameters>
+                  <Parameter>
+                    <Name>sourceId</Name>
+                    <Value>$MPElement$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>managedEntityId</Name>
+                    <Value>$Target/Id$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>filePath</Name>
+                    <Value>$Config/filePath$</Value>
+                  </Parameter>
+                </Parameters>
+                <TimeoutSeconds>300</TimeoutSeconds>
+              </ProbeAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="Probe">
+                <Node ID="DS" />
+              </Node>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.Discovery.Data</OutputType>
+      </DataSourceModuleType>
+    </ModuleTypes>
+  </TypeDefinitions>
+</ManagementPackFragment>

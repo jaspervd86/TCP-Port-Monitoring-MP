@@ -1,0 +1,285 @@
+﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <TypeDefinitions>
+    <ModuleTypes>
+      <!--Port Check Datasource-->
+     <DataSourceModuleType ID="TCPPortMonitor.TCPPortCheck.DataSource" Accessibility="Public" Batching="false">
+        <Configuration>
+			    <xsd:element name="ServerName" type="xsd:string" />
+			    <xsd:element name="Port" type="xsd:int" />
+			    <xsd:element name="NoOfRetries" type="xsd:int" />
+			    <xsd:element name="TimeWindowInSeconds" type="xsd:int" />
+		  </Configuration>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <DataSource ID="Scheduler" TypeID="System!System.Scheduler">
+                <Scheduler>
+                  <SimpleReccuringSchedule>
+                    <Interval Unit="Seconds">$Config/TimeWindowInSeconds$</Interval>
+                  </SimpleReccuringSchedule>
+                  <ExcludeDates />
+                </Scheduler>
+              </DataSource>
+              <ProbeAction ID="Probe" TypeID="Synth!Microsoft.SystemCenter.SyntheticTransactions.TCPPortCheckProbe">
+                <ServerName>$Config/ServerName$</ServerName>
+                <Port>$Config/Port$</Port>
+              </ProbeAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="Probe">
+                <Node ID="Scheduler" />
+              </Node>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>Synth!Microsoft.SystemCenter.SyntheticTransactions.TCPPortCheckData</OutputType>
+      </DataSourceModuleType> 
+    </ModuleTypes>
+    <MonitorTypes>
+      <!--Timeout Monitor Type-->
+      <UnitMonitorType ID="TCPPortMonitor.TimeOut.MonitorType" Accessibility="Public">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="TimeOutFailure" NoDetection="false" />
+          <MonitorTypeState ID="NoTimeOutFailure" NoDetection="false" />
+        </MonitorTypeStates>
+          <Configuration>        
+			      <xsd:element name="ServerName" type="xsd:string" />
+			      <xsd:element name="Port" type="xsd:int" />
+			      <xsd:element name="NoOfRetries" type="xsd:int" />
+			      <xsd:element name="TimeWindowInSeconds" type="xsd:int" />
+          </Configuration>
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="DS1" TypeID="TCPPortMonitor.TCPPortCheck.DataSource">
+              <ServerName>$Config/ServerName$</ServerName>
+              <Port>$Config/Port$</Port>
+              <NoOfRetries>$Config/NoOfRetries$</NoOfRetries>
+              <TimeWindowInSeconds>$Config/TimeWindowInSeconds$</TimeWindowInSeconds>
+            </DataSource>
+            <ConditionDetection ID="CDTimeOutFailure" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="UnsignedInteger">2147952460</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="CDNoTimeOutFailure" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery>
+                  </ValueExpression>
+                  <Operator>NotEqual</Operator>
+                  <ValueExpression>
+                    <Value Type="UnsignedInteger">2147952460</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="TimeOutFailure">
+              <Node ID="CDTimeOutFailure">
+                <Node ID="DS1" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="NoTimeOutFailure">
+              <Node ID="CDNoTimeOutFailure">
+                <Node ID="DS1" />
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+        </MonitorImplementation>
+      </UnitMonitorType>
+      <!--Connection Refused Monitor Type-->      
+      <UnitMonitorType ID="TCPPortMonitor.ConnectionRefused.MonitorType" Accessibility="Public">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="ConnectionRefusedFailure" NoDetection="false" />
+          <MonitorTypeState ID="NoConnectionRefusedFailure" NoDetection="false" />
+        </MonitorTypeStates>
+        <Configuration>
+          <xsd:element name="ServerName" type="xsd:string" />
+          <xsd:element name="Port" type="xsd:int" />
+          <xsd:element name="NoOfRetries" type="xsd:int" />
+          <xsd:element name="TimeWindowInSeconds" type="xsd:int" />
+        </Configuration>
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="DS1" TypeID="TCPPortMonitor.TCPPortCheck.DataSource">
+              <ServerName>$Config/ServerName$</ServerName>
+              <Port>$Config/Port$</Port>
+              <NoOfRetries>$Config/NoOfRetries$</NoOfRetries>
+              <TimeWindowInSeconds>$Config/TimeWindowInSeconds$</TimeWindowInSeconds>
+            </DataSource>
+            <ConditionDetection ID="CDConnectionRefusedFailure" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="UnsignedInteger">2147952461</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="CDNoConnectionRefusedFailure" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery>
+                  </ValueExpression>
+                  <Operator>NotEqual</Operator>
+                  <ValueExpression>
+                    <Value Type="UnsignedInteger">2147952461</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="ConnectionRefusedFailure">
+              <Node ID="CDConnectionRefusedFailure">
+                <Node ID="DS1" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="NoConnectionRefusedFailure">
+              <Node ID="CDNoConnectionRefusedFailure">
+                <Node ID="DS1" />
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+        </MonitorImplementation>
+      </UnitMonitorType>
+      <!--DNS Resolution Monitor Type-->
+      <UnitMonitorType ID="TCPPortMonitor.DNSResolution.MonitorType" Accessibility="Public">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="DNSResolutionFailure" NoDetection="false" />
+          <MonitorTypeState ID="NoDNSResolutionFailure" NoDetection="false" />
+        </MonitorTypeStates>
+        <Configuration>
+          <xsd:element name="ServerName" type="xsd:string" />
+          <xsd:element name="Port" type="xsd:int" />
+          <xsd:element name="NoOfRetries" type="xsd:int" />
+          <xsd:element name="TimeWindowInSeconds" type="xsd:int" />
+        </Configuration>
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="DS1" TypeID="TCPPortMonitor.TCPPortCheck.DataSource">
+              <ServerName>$Config/ServerName$</ServerName>
+              <Port>$Config/Port$</Port>
+              <NoOfRetries>$Config/NoOfRetries$</NoOfRetries>
+              <TimeWindowInSeconds>$Config/TimeWindowInSeconds$</TimeWindowInSeconds>
+            </DataSource>
+            <ConditionDetection ID="CDDNSResolutionFailure" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="UnsignedInteger">2147953401</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="CDNoDNSResolutionFailure" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery>
+                  </ValueExpression>
+                  <Operator>NotEqual</Operator>
+                  <ValueExpression>
+                    <Value Type="UnsignedInteger">2147953401</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="DNSResolutionFailure">
+              <Node ID="CDDNSResolutionFailure">
+                <Node ID="DS1" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="NoDNSResolutionFailure">
+              <Node ID="CDNoDNSResolutionFailure">
+                <Node ID="DS1" />
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+        </MonitorImplementation>
+      </UnitMonitorType>
+      <!--Host Unreachable Monitor Type-->
+      <UnitMonitorType ID="TCPPortMonitor.HostUnreachable.MonitorType" Accessibility="Public">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="HostUnreachableFailure" NoDetection="false" />
+          <MonitorTypeState ID="NoHostUnreachableFailure" NoDetection="false" />
+        </MonitorTypeStates>
+        <Configuration>
+          <xsd:element name="ServerName" type="xsd:string" />
+          <xsd:element name="Port" type="xsd:int" />
+          <xsd:element name="NoOfRetries" type="xsd:int" />
+          <xsd:element name="TimeWindowInSeconds" type="xsd:int" />
+        </Configuration>
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="DS1" TypeID="TCPPortMonitor.TCPPortCheck.DataSource">
+              <ServerName>$Config/ServerName$</ServerName>
+              <Port>$Config/Port$</Port>
+              <NoOfRetries>$Config/NoOfRetries$</NoOfRetries>
+              <TimeWindowInSeconds>$Config/TimeWindowInSeconds$</TimeWindowInSeconds>
+            </DataSource>
+            <ConditionDetection ID="CDHostUnreachableFailure" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="UnsignedInteger">2147952465</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="CDNoHostUnreachableFailure" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery>
+                  </ValueExpression>
+                  <Operator>NotEqual</Operator>
+                  <ValueExpression>
+                    <Value Type="UnsignedInteger">2147952465</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="HostUnreachableFailure">
+              <Node ID="CDHostUnreachableFailure">
+                <Node ID="DS1" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="NoHostUnreachableFailure">
+              <Node ID="CDNoHostUnreachableFailure">
+                <Node ID="DS1" />
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+        </MonitorImplementation>
+      </UnitMonitorType>
+    </MonitorTypes>
+  </TypeDefinitions> 
+</ManagementPackFragment>

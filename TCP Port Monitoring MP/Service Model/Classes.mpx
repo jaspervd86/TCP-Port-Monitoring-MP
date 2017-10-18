@@ -1,0 +1,36 @@
+﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <TypeDefinitions>
+    <EntityTypes>
+      <ClassTypes>
+        <ClassType ID="TCPPortMonitoring.ManagementPack.Class" Accessibility="Public" Abstract="false" Base="Synth!Microsoft.SystemCenter.SyntheticTransactions.TCPPortCheckPerspective" Hosted="true" Singleton="false" Extension="false">
+          <Property ID="ServerName" Type="string" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="Port" Type="int" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="NoOfRetries" Type="int" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="TimeWindowInSeconds" Type="int" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+        </ClassType>
+      </ClassTypes>
+    </EntityTypes>
+  </TypeDefinitions>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="TCPPortMonitoring.ManagementPack.Class">
+          <Name>TCP Monitoring Class</Name>
+          <Description>Class Contains Instances of TCP Ports that needs to be monitored from specific watcher nodes</Description>
+        </DisplayString>
+        <DisplayString ElementID="TCPPortMonitoring.ManagementPack.Class" SubElementID="NoOfRetries">
+          <Name>No Of Retries</Name>
+        </DisplayString>
+        <DisplayString ElementID="TCPPortMonitoring.ManagementPack.Class" SubElementID="Port">
+          <Name>Port</Name>
+        </DisplayString>
+        <DisplayString ElementID="TCPPortMonitoring.ManagementPack.Class" SubElementID="ServerName">
+          <Name>Server Name</Name>
+        </DisplayString>
+        <DisplayString ElementID="TCPPortMonitoring.ManagementPack.Class" SubElementID="TimeWindowInSeconds">
+          <Name>Time Window In Seconds</Name>
+        </DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPackFragment>

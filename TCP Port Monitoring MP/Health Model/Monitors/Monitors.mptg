@@ -1,0 +1,152 @@
+<TemplateGroup>
+  <Instances>
+    <Instance ID="Instance1cb8bbbf42bb4bd8ba0ce5a2d4aaa2da" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.UnitMonitor" Version="1.0.0.0">
+      <UnitMonitorConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <MonitorType>TCPPortMonitor.ConnectionRefused.MonitorType</MonitorType>
+        <MonitorConfig>&lt;ServerName&gt;$Target/Property[Type="TCPPortMonitoring.ManagementPack.Class"]/ServerName$&lt;/ServerName&gt;&lt;Port&gt;$Target/Property[Type="TCPPortMonitoring.ManagementPack.Class"]/Port$&lt;/Port&gt;&lt;NoOfRetries&gt;$Target/Property[Type="TCPPortMonitoring.ManagementPack.Class"]/NoOfRetries$&lt;/NoOfRetries&gt;&lt;TimeWindowInSeconds&gt;$Target/Property[Type="TCPPortMonitoring.ManagementPack.Class"]/TimeWindowInSeconds$&lt;/TimeWindowInSeconds&gt;</MonitorConfig>
+        <MonitorOperationalStates>
+          <OperationalState>
+            <OperationalStateId>ConnectionRefusedFailure</OperationalStateId>
+            <OperationalStateDisplayName>ConnectionRefusedFailure</OperationalStateDisplayName>
+            <MonitorTypeStateId>ConnectionRefusedFailure</MonitorTypeStateId>
+            <HealthState>Error</HealthState>
+          </OperationalState>
+          <OperationalState>
+            <OperationalStateId>NoConnectionRefusedFailure</OperationalStateId>
+            <OperationalStateDisplayName>NoConnectionRefusedFailure</OperationalStateDisplayName>
+            <MonitorTypeStateId>NoConnectionRefusedFailure</MonitorTypeStateId>
+            <HealthState>Success</HealthState>
+          </OperationalState>
+        </MonitorOperationalStates>
+        <ParentMonitor>Health!System.Health.AvailabilityState</ParentMonitor>
+        <Accessibility>Internal</Accessibility>
+        <Id>ConnectionRefused.Monitor</Id>
+        <DisplayName>Connection Refused Monitor</DisplayName>
+        <Description>Monitors the TCP Connection Refused of a specific port from a specific server.</Description>
+        <Target>TCPPortMonitoring.ManagementPack.Class</Target>
+        <Enabled>true</Enabled>
+        <Category>AvailabilityHealth</Category>
+        <Remotable>true</Remotable>
+        <Priority>Normal</Priority>
+        <AlertAutoResolve>true</AlertAutoResolve>
+        <AlertOnState>Error</AlertOnState>
+        <AlertPriority>Normal</AlertPriority>
+        <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+        <AlertName>TCP Connection Refused Error</AlertName>
+        <AlertDescription>A TCP Port monitor is receiving a connection refused on $Target/Property[Type="TCPPortMonitoring.ManagementPack.Class"]/ServerName$. The port that is refusing is: $Target/Property[Type="TCPPortMonitoring.ManagementPack.Class"]/Port$.</AlertDescription>
+        <ConfirmDelivery>false</ConfirmDelivery>
+      </UnitMonitorConfig>
+    </Instance>
+    <Instance ID="Instance99beb9c6b80d478f90b78842e1653405" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.UnitMonitor" Version="1.0.0.0">
+      <UnitMonitorConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <MonitorType>TCPPortMonitor.TimeOut.MonitorType</MonitorType>
+        <MonitorConfig>&lt;ServerName&gt;$Target/Property[Type="TCPPortMonitoring.ManagementPack.Class"]/ServerName$&lt;/ServerName&gt;&lt;Port&gt;$Target/Property[Type="TCPPortMonitoring.ManagementPack.Class"]/Port$&lt;/Port&gt;&lt;NoOfRetries&gt;$Target/Property[Type="TCPPortMonitoring.ManagementPack.Class"]/NoOfRetries$&lt;/NoOfRetries&gt;&lt;TimeWindowInSeconds&gt;$Target/Property[Type="TCPPortMonitoring.ManagementPack.Class"]/TimeWindowInSeconds$&lt;/TimeWindowInSeconds&gt;</MonitorConfig>
+        <MonitorOperationalStates>
+          <OperationalState>
+            <OperationalStateId>TimeOutFailure</OperationalStateId>
+            <OperationalStateDisplayName>TimeOutFailure</OperationalStateDisplayName>
+            <MonitorTypeStateId>TimeOutFailure</MonitorTypeStateId>
+            <HealthState>Error</HealthState>
+          </OperationalState>
+          <OperationalState>
+            <OperationalStateId>NoTimeOutFailure</OperationalStateId>
+            <OperationalStateDisplayName>NoTimeOutFailure</OperationalStateDisplayName>
+            <MonitorTypeStateId>NoTimeOutFailure</MonitorTypeStateId>
+            <HealthState>Success</HealthState>
+          </OperationalState>
+        </MonitorOperationalStates>
+        <ParentMonitor>Health!System.Health.AvailabilityState</ParentMonitor>
+        <Accessibility>Internal</Accessibility>
+        <Id>Timeout.Monitor</Id>
+        <DisplayName>TCP Timeout Monitor</DisplayName>
+        <Description>Monitors the TCP timeout of a specific port from a specific server.</Description>
+        <Target>TCPPortMonitoring.ManagementPack.Class</Target>
+        <Enabled>true</Enabled>
+        <Category>AvailabilityHealth</Category>
+        <Remotable>true</Remotable>
+        <Priority>Normal</Priority>
+        <AlertAutoResolve>true</AlertAutoResolve>
+        <AlertOnState>Error</AlertOnState>
+        <AlertPriority>Normal</AlertPriority>
+        <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+        <AlertName>TCP Port Timeout Error</AlertName>
+        <AlertDescription>A TCP Port Timeout Occurred on $Target/Property[Type="TCPPortMonitoring.ManagementPack.Class"]/ServerName$. The port that is timing out is: $Target/Property[Type="TCPPortMonitoring.ManagementPack.Class"]/Port$</AlertDescription>
+        <ConfirmDelivery>false</ConfirmDelivery>
+      </UnitMonitorConfig>
+    </Instance>
+    <Instance ID="Instance0a0c254ff3bf4fedb45ff0b43876ea47" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.UnitMonitor" Version="1.0.0.0">
+      <UnitMonitorConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <MonitorType>TCPPortMonitor.HostUnreachable.MonitorType</MonitorType>
+        <MonitorConfig>&lt;ServerName&gt;$Target/Property[Type="TCPPortMonitoring.ManagementPack.Class"]/ServerName$&lt;/ServerName&gt;&lt;Port&gt;$Target/Property[Type="TCPPortMonitoring.ManagementPack.Class"]/Port$&lt;/Port&gt;&lt;NoOfRetries&gt;$Target/Property[Type="TCPPortMonitoring.ManagementPack.Class"]/NoOfRetries$&lt;/NoOfRetries&gt;&lt;TimeWindowInSeconds&gt;$Target/Property[Type="TCPPortMonitoring.ManagementPack.Class"]/TimeWindowInSeconds$&lt;/TimeWindowInSeconds&gt;</MonitorConfig>
+        <MonitorOperationalStates>
+          <OperationalState>
+            <OperationalStateId>HostUnreachableFailure</OperationalStateId>
+            <OperationalStateDisplayName>HostUnreachableFailure</OperationalStateDisplayName>
+            <MonitorTypeStateId>HostUnreachableFailure</MonitorTypeStateId>
+            <HealthState>Error</HealthState>
+          </OperationalState>
+          <OperationalState>
+            <OperationalStateId>NoHostUnreachableFailure</OperationalStateId>
+            <OperationalStateDisplayName>NoHostUnreachableFailure</OperationalStateDisplayName>
+            <MonitorTypeStateId>NoHostUnreachableFailure</MonitorTypeStateId>
+            <HealthState>Success</HealthState>
+          </OperationalState>
+        </MonitorOperationalStates>
+        <ParentMonitor>Health!System.Health.AvailabilityState</ParentMonitor>
+        <Accessibility>Internal</Accessibility>
+        <Id>Unreachable.Monitor</Id>
+        <DisplayName>TCP Unreachable Monitor</DisplayName>
+        <Description>Monitors the TCP unreachable of a specific port from a specific server.</Description>
+        <Target>TCPPortMonitoring.ManagementPack.Class</Target>
+        <Enabled>true</Enabled>
+        <Category>AvailabilityHealth</Category>
+        <Remotable>true</Remotable>
+        <Priority>Normal</Priority>
+        <AlertAutoResolve>true</AlertAutoResolve>
+        <AlertOnState>Error</AlertOnState>
+        <AlertPriority>Normal</AlertPriority>
+        <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+        <AlertName>TCP Port Unreachable Error</AlertName>
+        <AlertDescription>A TCP Port is Unreachable on $Target/Property[Type="TCPPortMonitoring.ManagementPack.Class"]/ServerName$. The port that is not reachable is: $Target/Property[Type="TCPPortMonitoring.ManagementPack.Class"]/Port$</AlertDescription>
+        <ConfirmDelivery>false</ConfirmDelivery>
+      </UnitMonitorConfig>
+    </Instance>
+    <Instance ID="Instance37be4236159b43e583d9f60c335694dc" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.UnitMonitor" Version="1.0.0.0">
+      <UnitMonitorConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <MonitorType>TCPPortMonitor.DNSResolution.MonitorType</MonitorType>
+        <MonitorConfig>&lt;ServerName&gt;$Target/Property[Type="TCPPortMonitoring.ManagementPack.Class"]/ServerName$&lt;/ServerName&gt;&lt;Port&gt;$Target/Property[Type="TCPPortMonitoring.ManagementPack.Class"]/Port$&lt;/Port&gt;&lt;NoOfRetries&gt;$Target/Property[Type="TCPPortMonitoring.ManagementPack.Class"]/NoOfRetries$&lt;/NoOfRetries&gt;&lt;TimeWindowInSeconds&gt;$Target/Property[Type="TCPPortMonitoring.ManagementPack.Class"]/TimeWindowInSeconds$&lt;/TimeWindowInSeconds&gt;</MonitorConfig>
+        <MonitorOperationalStates>
+          <OperationalState>
+            <OperationalStateId>DNSResolutionFailure</OperationalStateId>
+            <OperationalStateDisplayName>DNSResolutionFailure</OperationalStateDisplayName>
+            <MonitorTypeStateId>DNSResolutionFailure</MonitorTypeStateId>
+            <HealthState>Error</HealthState>
+          </OperationalState>
+          <OperationalState>
+            <OperationalStateId>NoDNSResolutionFailure</OperationalStateId>
+            <OperationalStateDisplayName>NoDNSResolutionFailure</OperationalStateDisplayName>
+            <MonitorTypeStateId>NoDNSResolutionFailure</MonitorTypeStateId>
+            <HealthState>Success</HealthState>
+          </OperationalState>
+        </MonitorOperationalStates>
+        <ParentMonitor>Health!System.Health.AvailabilityState</ParentMonitor>
+        <Accessibility>Internal</Accessibility>
+        <Id>DNSResolution.Monitor</Id>
+        <DisplayName>DNS Resolution Monitor</DisplayName>
+        <Description>Monitors the TCP DNS Resolution of a specific port from a specific server.</Description>
+        <Target>TCPPortMonitoring.ManagementPack.Class</Target>
+        <Enabled>true</Enabled>
+        <Category>AvailabilityHealth</Category>
+        <Remotable>true</Remotable>
+        <Priority>Normal</Priority>
+        <AlertAutoResolve>true</AlertAutoResolve>
+        <AlertOnState>Error</AlertOnState>
+        <AlertPriority>Normal</AlertPriority>
+        <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+        <AlertName>TCP Port DNS Resolution Error</AlertName>
+        <AlertDescription>A TCP Port monitor cannot resolve $Target/Property[Type="TCPPortMonitoring.ManagementPack.Class"]/ServerName$. The port that it monitors is: $Target/Property[Type="TCPPortMonitoring.ManagementPack.Class"]/Port$.</AlertDescription>
+        <ConfirmDelivery>false</ConfirmDelivery>
+      </UnitMonitorConfig>
+    </Instance>
+  </Instances>
+</TemplateGroup>
